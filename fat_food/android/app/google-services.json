@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "759071889246",
+    "project_id": "fatfood-27f57",
+    "storage_bucket": "fatfood-27f57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759071889246:android:0b9dac7235f507fc9761cf",
+        "android_client_info": {
+          "package_name": "com.example.fat_food"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwAj5wk0fmZqof3RLjbiiVgQH1IhqnrBQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
