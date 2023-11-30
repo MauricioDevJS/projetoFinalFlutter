@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "76885830756",
+    "project_id": "nuzero-3b87b",
+    "storage_bucket": "nuzero-3b87b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76885830756:android:df2f3c67019085b6dac371",
+        "android_client_info": {
+          "package_name": "com.example.nuzero"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqgx2x_sln0jriWv8hy0Vl6fZOjKbm1lE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
