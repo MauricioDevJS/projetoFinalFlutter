@@ -17,8 +17,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.purple, // Ajuste a cor de fundo conforme necessário
+      backgroundColor: Colors.purple,
       body: Center(
         child: SingleChildScrollView(
           child: Card(
@@ -55,8 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       onPressed: _login,
                       child: const Text('Entrar'),
                       style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            const Size.fromHeight(50), // tamanho do botão
+                        minimumSize: const Size.fromHeight(50),
                       ),
                     ),
                     TextButton(
@@ -102,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     } on FirebaseAuthException {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -157,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void _resetPassword(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Navigator.of(context).pop(); // Fecha o diálogo após enviar o e-mail
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(

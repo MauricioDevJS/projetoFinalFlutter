@@ -11,7 +11,7 @@ void main() async {
         primarySwatch: Colors.purple,
       ),
       debugShowCheckedModeBanner: false,
-      home: const SignInScreen(),
+      home: SignInScreen(),
     ),
   );
 }

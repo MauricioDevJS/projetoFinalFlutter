@@ -17,16 +17,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.white, // Ajuste a cor de fundo conforme necessário
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
               child: Column(
-                mainAxisSize:
-                    MainAxisSize.min, // Define o tamanho mínimo do Column
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
                     'Cadastre-se',
@@ -60,8 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: _signUp,
                     child: const Text('Cadastrar'),
                     style: ElevatedButton.styleFrom(
-                      minimumSize:
-                          const Size.fromHeight(50), // tamanho do botão
+                      minimumSize: const Size.fromHeight(50),
                     ),
                   ),
                   TextButton(
@@ -100,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: email,
         password: password,
       );
-      // Redireciona para a tela de login após o cadastro bem-sucedido
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const SignInScreen()),
