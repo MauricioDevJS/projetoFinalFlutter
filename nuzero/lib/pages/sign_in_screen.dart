@@ -55,6 +55,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: const Text('Entrar'),
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purple,
                       ),
                     ),
                     TextButton(

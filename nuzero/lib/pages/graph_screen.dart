@@ -4,8 +4,9 @@ import 'package:nuzero/components/model.dart';
 
 class GraphScreen extends StatelessWidget {
   final List<Despesa> despesas;
+  final List<Receita> receitas;
 
-  GraphScreen({required this.despesas});
+  GraphScreen({required this.despesas, required this.receitas});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,10 @@ class GraphScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gráfico de Despesas'),
+        centerTitle: true,
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        title: Text('Gráfico de Receitas/Despesas'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -56,6 +60,9 @@ class GraphScreen extends StatelessWidget {
       'Lazer': Colors.blue,
       'Educação': Colors.orange,
       'Outros': Colors.purple,
+      'Saúde': Colors.yellow,
+      'Salário': Colors.pink,
+      'Honorários': Colors.brown,
     };
 
     return categoryColors[category] ?? Colors.grey;

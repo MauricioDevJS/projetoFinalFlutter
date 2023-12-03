@@ -47,12 +47,12 @@ class _HomePageState extends State<HomePage> {
         },
       );
     } else if (index == 2) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => GraphScreen(
-                  despesas: const [],
-                )),
-      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => GraphScreen(
+          despesas: [],
+          receitas: [],
+        ),
+      ));
     }
   }
 
@@ -65,6 +65,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
         title: Text('NuZero'),
         actions: [
           IconButton(
