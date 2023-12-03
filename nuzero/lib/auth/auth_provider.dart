@@ -18,7 +18,11 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signIn(String email, String password) async {
-    // Implemente a lógica de login aqui
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+
+    _user = FirebaseAuth.instance.currentUser;
+    notifyListeners();
   }
 
   Future<void> signOut() async {

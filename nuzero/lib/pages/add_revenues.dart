@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AddExpenseScreen extends StatefulWidget {
+class AddRevenuesScreen extends StatefulWidget {
   @override
-  _AddExpenseScreenState createState() => _AddExpenseScreenState();
+  _AddRevenuesScreenState createState() => _AddRevenuesScreenState();
 }
 
-class _AddExpenseScreenState extends State<AddExpenseScreen> {
+class _AddRevenuesScreenState extends State<AddRevenuesScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _valueController = TextEditingController();
   String? _selectedCategory;
   List<String> _categories = [];
 
-  Future<void> addExpense(String name, String category, double value) async {
-    CollectionReference expenses =
-        FirebaseFirestore.instance.collection('despesas');
+  Future<void> addRevenues(String name, String category, double value) async {
+    CollectionReference revenues =
+        FirebaseFirestore.instance.collection('receitas');
 
-    return expenses
+    return revenues
         .add({
           'nome': name,
           'categoria': category,
           'valor': value,
           'data': DateTime.now(),
         })
-        .then((value) => print("Despesa Adicionada"))
-        .catchError((error) => print("Falha ao adicionar despesa: $error"));
+        .then((value) => print("Receita Adicionada"))
+        .catchError((error) => print("Falha ao adicionar receita: $error"));
   }
 
   @override
@@ -51,7 +51,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Adicionar Despesa'),
+        title: Text('Adicionar Receita'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -61,7 +61,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: 'Nome da Despesa',
+                labelText: 'Nome da Receita',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -70,8 +70,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               value: _selectedCategory,
               items: _categories
                   .map((category) => DropdownMenuItem(
-                        child: Text(category),
                         value: category,
+                        child: Text(category),
                       ))
                   .toList(),
               onChanged: (String? newValue) {
@@ -80,7 +80,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 });
               },
               decoration: InputDecoration(
-                labelText: 'Categoria da Despesa',
+                labelText: 'Categoria da Receita',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -95,7 +95,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             ),
             SizedBox(height: 24.0),
             ElevatedButton(
-              child: Text('Adicionar Despesa'),
+              child: Text('Adicionar Receita'),
               onPressed: () {
                 String name = _nameController.text;
                 double? value = double.tryParse(_valueController.text);
@@ -103,14 +103,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 if (name.isNotEmpty &&
                     _selectedCategory != null &&
                     value != null) {
-                  addExpense(name, _selectedCategory!, value).then((_) {
+                  addRevenues(name, _selectedCategory!, value).then((_) {
                     _clearFormFields();
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Despesa adicionada com sucesso.'),
+                      content: Text('Receita adicionada com sucesso.'),
                     ));
                   }).catchError((error) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Erro ao adicionar despesa: $error'),
+                      content: Text('Erro ao adicionar receita: $error'),
                     ));
                   });
                 } else {

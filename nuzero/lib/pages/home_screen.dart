@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nuzero/components/model.dart';
+import 'package:nuzero/pages/add_expense.dart';
+import 'package:nuzero/pages/add_revenues.dart';
+import 'package:nuzero/pages/graph_screen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,30 +12,53 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  final PageController _pageController = PageController();
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    _pageController.jumpToPage(index);
+    if (index == 1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Escolher Opção'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  title: Text('Receita'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => AddRevenuesScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: Text('Despesa'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => AddExpenseScreen()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    } else if (index == 2) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => GraphScreen(
+                  despesas: const [],
+                )),
+      );
+    }
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
-  }
-
-  Future<List<Despesa>> fetchDespesas() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('despesas').get();
-
-    List<Despesa> despesas = snapshot.docs.map((doc) {
-      return Despesa.fromFirestore(doc);
-    }).toList();
-
-    return despesas;
   }
 
   @override
@@ -54,7 +80,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               TotalBalanceCard(),
               RecentActivityHeader(),
-              RecentActivityList(futureDespesas: fetchDespesas()),
+              RecentActivityList(),
             ],
           ),
         ),
@@ -97,7 +123,7 @@ class BalanceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Total Balance',
+      'Balanço Total',
       style: TextStyle(
         fontSize: 18,
         color: Colors.grey[600],
@@ -110,7 +136,7 @@ class BalanceAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '\$23,345.43',
+      'R\$23,345.43',
       style: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
@@ -145,7 +171,7 @@ class RecentActivityHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Recent Activity',
+            'Atividade Recente',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -154,7 +180,7 @@ class RecentActivityHeader extends StatelessWidget {
           TextButton(
             onPressed: () {},
             child: Text(
-              'View All',
+              'Ver tudo',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -167,51 +193,95 @@ class RecentActivityHeader extends StatelessWidget {
 }
 
 class RecentActivityList extends StatelessWidget {
-  final Future<List<Despesa>> futureDespesas;
-
-  RecentActivityList({required this.futureDespesas});
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Despesa>>(
-      future: futureDespesas,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
+    return Column(
+      children: [
+        StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('despesas').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-        if (snapshot.hasError) {
-          return Center(child: Text("Erro ao carregar despesas"));
-        }
+            if (snapshot.hasError) {
+              return Center(child: Text("Erro ao carregar despesas"));
+            }
 
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text("Nenhuma despesa encontrada"));
-        }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(child: Text("Nenhuma despesa encontrada"));
+            }
 
-        List<Despesa> despesas = snapshot.data!;
+            List<Despesa> despesas = snapshot.data!.docs
+                .map((doc) => Despesa.fromFirestore(doc))
+                .toList();
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: despesas.length,
-          itemBuilder: (context, index) {
-            Despesa despesa = despesas[index];
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.purple,
-                child: Icon(Icons.account_balance_wallet, color: Colors.white),
-              ),
-              title: Text(despesa.nome),
-              subtitle:
-                  Text('${despesa.categoria} - ${despesa.data.toString()}'),
-              trailing: Text(
-                '-R\$ ${despesa.valor.toStringAsFixed(2)}',
-                style: TextStyle(color: Colors.red),
-              ),
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: despesas.length,
+              itemBuilder: (context, index) {
+                Despesa despesa = despesas[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.red,
+                    child: Icon(Icons.money_off, color: Colors.white),
+                  ),
+                  title: Text(despesa.nome),
+                  subtitle:
+                      Text('${despesa.categoria} - ${despesa.data.toString()}'),
+                  trailing: Text(
+                    '-R\$ ${despesa.valor.toStringAsFixed(2)}',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                );
+              },
             );
           },
-        );
-      },
+        ),
+        StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('receitas').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text("Erro ao carregar receitas"));
+            }
+
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(child: Text("Nenhuma receita encontrada"));
+            }
+
+            List<Receita> receitas = snapshot.data!.docs
+                .map((doc) => Receita.fromFirestore(doc))
+                .toList();
+
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: receitas.length,
+              itemBuilder: (context, index) {
+                Receita receita = receitas[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    child: Icon(Icons.money_off, color: Colors.white),
+                  ),
+                  title: Text(receita.nome),
+                  subtitle:
+                      Text('${receita.categoria} - ${receita.data.toString()}'),
+                  trailing: Text(
+                    'R\$ ${receita.valor.toStringAsFixed(2)}',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }
@@ -241,7 +311,7 @@ class HomeBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.add_circle_outline),
-          label: 'Nova Despesa',
+          label: 'Adicionar',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.bar_chart),
